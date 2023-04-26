@@ -1,7 +1,7 @@
 import { createBoard, playMove } from "./connect4.js";
 
 function getWebSocketServer() {
-  if (window.location.host === "AaronGo23.github.io") {
+  if (window.location.host === "aarongo23.github.io") {
     return "https://pt1-test.onrender.com";
   } else if (window.location.host === "localhost:8000") {
     return "ws://localhost:8001/";
