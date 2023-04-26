@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-#server !!
 
 import asyncio
 import json
@@ -26,7 +25,7 @@ async def error(websocket, message):
         "type": "error",
         "message": message,
     }
-    await websocket.send(json.dumps(event)) #json.dumps : serialize the event
+    await websocket.send(json.dumps(event))
 
 
 async def replay(websocket, game):
@@ -74,9 +73,7 @@ async def play(websocket, game, player, connected):
             "column": column,
             "row": row,
         }
-        websockets.broadcast(connected, json.dumps(event)) #broadcast a message to all players (and spectators)
-        #=> function ! not coroutine lie send() or recv() ! => doesnt need a wait (acts like a backpressure for send())
-        #broadcast doesnt wait bc will drop slow clients not to slow down the rest of the clients
+        websockets.broadcast(connected, json.dumps(event))
 
         # If move is winning, send a "win" event.
         if game.winner is not None:
@@ -165,8 +162,7 @@ async def watch(websocket, watch_key):
         connected.remove(websocket)
 
 
-async def handler(websocket): #coroutine that manages a connection, when a client connects, websockets calls handler
-    # with the connection in argument
+async def handler(websocket):
     """
     Handle a connection and dispatch it according to who is connecting.
 
@@ -194,11 +190,9 @@ async def main():
     loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
 
     port = int(os.environ.get("PORT", "8001"))
-    async with websockets.serve(handler, "", port): #handler function, defines network interfaces where the server
-        # can be reached => all interfaces, port on which the server listens
-        #serve() : asynchronous context manager => wnsuires that the server shuts down properly when terminating the program
+    async with websockets.serve(handler, "", port):
         await stop
 
 
 if __name__ == "__main__":
-    asyncio.run(main()) #entry point of the program
+    asyncio.run(main())
